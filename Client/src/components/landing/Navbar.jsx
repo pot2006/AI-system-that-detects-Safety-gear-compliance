@@ -200,22 +200,7 @@ const Navbar = () => {
           {/* Login */}
           <a
             href="/login"
-            className="
-              rounded-xl
-              border border-slate-300
-              px-5 py-2.5
-              text-sm font-semibold
-              text-slate-700
-              transition-all duration-200
-
-              hover:border-emerald-500
-              hover:text-emerald-600
-
-              dark:border-white/15
-              dark:text-slate-200
-              dark:hover:border-emerald-500
-              dark:hover:text-emerald-400
-            "
+            className="rounded-xl border border-slate-300 px-5 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-emerald-500 hover:text-emerald-600 dark:border-[#263C31] dark:text-slate-300 dark:hover:border-emerald-500 dark:hover:text-emerald-400"
           >
             Login
           </a>
@@ -223,25 +208,12 @@ const Navbar = () => {
           {/* Get Started */}
           <a
             href="/signup"
-            className="
-              group flex items-center gap-2
-              rounded-xl
-              bg-emerald-600
-              px-5 py-2.5
-              text-sm font-semibold
-              text-white
-              shadow-sm
-              transition-all duration-200
-
-              hover:bg-emerald-700
-              hover:shadow-lg
-              active:scale-[0.98]
-            "
+            className="group inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-700"
           >
             Get Started
             <ArrowRight
               size={16}
-              className="transition-transform duration-200 group-hover:translate-x-0.5"
+              className="transition-transform group-hover:translate-x-1"
             />
           </a>
         </div>
