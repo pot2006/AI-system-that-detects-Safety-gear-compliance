@@ -1,0 +1,405 @@
+import { useEffect, useState } from "react";
+import { Sun, Moon, Menu, X, ArrowRight, Eye } from "lucide-react";
+
+const Navbar = () => {
+  const [darkMode, setDarkMode] = useState(() => {
+    return localStorage.getItem("theme") === "dark";
+  });
+
+  const [mobileMenu, setMobileMenu] = useState(false);
+
+  // Apply theme
+  useEffect(() => {
+    const root = document.documentElement;
+
+    if (darkMode) {
+      root.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    } else {
+      root.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    }
+  }, [darkMode]);
+
+  // Navigation
+  const scrollToSection = (id) => {
+    setMobileMenu(false);
+
+    document.getElementById(id)?.scrollIntoView({
+      behavior: "smooth",
+    });
+  };
+
+  return (
+    <header
+      className="
+        fixed inset-x-0 top-0 z-50
+        border-b border-slate-200/80
+        bg-white/85 backdrop-blur-xl
+        transition-colors duration-300
+        dark:border-white/10
+        dark:bg-[#07110D]/85
+      "
+    >
+      <nav className="mx-auto flex h-20 max-w-7xl items-center justify-between px-5 sm:px-6 lg:px-8">
+        {/* ================= LOGO ================= */}
+
+        {/* Logo */}
+        <button
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          className="group flex items-center gap-3"
+        >
+          {/* Vigil Logo */}
+          <div
+            className="
+      relative flex h-10 w-10 items-center justify-center
+      rounded-xl
+      bg-emerald-600
+      text-white
+      shadow-sm
+      transition-all duration-300
+      group-hover:scale-105
+      group-hover:bg-emerald-700
+      group-hover:shadow-md
+      dark:bg-emerald-500
+      dark:text-[#07110D]
+      dark:group-hover:bg-emerald-400
+    "
+          >
+            <Eye size={23} strokeWidth={2.2} />
+
+            {/* Camera status dot */}
+            <span
+              className="
+        absolute right-1.5 top-1.5
+        h-1.5 w-1.5
+        rounded-full
+        bg-white
+        dark:bg-[#07110D]
+      "
+            />
+          </div>
+
+          {/* Brand */}
+          <div className="text-left">
+            <span
+              className="
+        block text-xl font-bold tracking-tight
+        text-slate-900
+        dark:text-white
+      "
+            >
+              Vigil
+            </span>
+
+            <span
+              className="
+        hidden text-[10px] font-medium
+        uppercase tracking-[0.16em]
+        text-slate-500
+        sm:block
+        dark:text-slate-400
+      "
+            >
+              AI Safety
+            </span>
+          </div>
+        </button>
+
+        {/* ================= DESKTOP NAV ================= */}
+
+        <div className="hidden items-center gap-8 md:flex">
+          <button
+            onClick={() => scrollToSection("features")}
+            className="
+              text-sm font-medium
+              text-slate-600
+              transition-colors
+              hover:text-emerald-600
+              dark:text-slate-300
+              dark:hover:text-emerald-400
+            "
+          >
+            Features
+          </button>
+
+          <button
+            onClick={() => scrollToSection("how-it-works")}
+            className="
+              text-sm font-medium
+              text-slate-600
+              transition-colors
+              hover:text-emerald-600
+              dark:text-slate-300
+              dark:hover:text-emerald-400
+            "
+          >
+            How It Works
+          </button>
+
+          <button
+            onClick={() => scrollToSection("use-cases")}
+            className="
+              text-sm font-medium
+              text-slate-600
+              transition-colors
+              hover:text-emerald-600
+              dark:text-slate-300
+              dark:hover:text-emerald-400
+            "
+          >
+            Use Cases
+          </button>
+
+          <button
+            onClick={() => scrollToSection("contact")}
+            className="
+              text-sm font-medium
+              text-slate-600
+              transition-colors
+              hover:text-emerald-600
+              dark:text-slate-300
+              dark:hover:text-emerald-400
+            "
+          >
+            Contact
+          </button>
+        </div>
+
+        {/* ================= RIGHT SIDE ================= */}
+
+        <div className="hidden items-center gap-3 md:flex">
+          {/* Theme Toggle */}
+          <button
+            onClick={() => setDarkMode((previous) => !previous)}
+            aria-label="Toggle dark mode"
+            className="
+              flex h-10 w-10 items-center justify-center
+              rounded-xl
+              border border-slate-200
+              bg-white
+              text-slate-600
+              transition-all duration-200
+
+              hover:border-emerald-300
+              hover:bg-emerald-50
+              hover:text-emerald-600
+
+              dark:border-white/10
+              dark:bg-white/5
+              dark:text-slate-300
+
+              dark:hover:border-emerald-700
+              dark:hover:bg-emerald-950
+              dark:hover:text-emerald-400
+            "
+          >
+            {darkMode ? <Sun size={18} /> : <Moon size={18} />}
+          </button>
+
+          {/* Login */}
+          <a
+            href="/login"
+            className="
+              rounded-xl
+              border border-slate-300
+              px-5 py-2.5
+              text-sm font-semibold
+              text-slate-700
+              transition-all duration-200
+
+              hover:border-emerald-500
+              hover:text-emerald-600
+
+              dark:border-white/15
+              dark:text-slate-200
+              dark:hover:border-emerald-500
+              dark:hover:text-emerald-400
+            "
+          >
+            Login
+          </a>
+
+          {/* Get Started */}
+          <a
+            href="/signup"
+            className="
+              group flex items-center gap-2
+              rounded-xl
+              bg-emerald-600
+              px-5 py-2.5
+              text-sm font-semibold
+              text-white
+              shadow-sm
+              transition-all duration-200
+
+              hover:bg-emerald-700
+              hover:shadow-lg
+              active:scale-[0.98]
+            "
+          >
+            Get Started
+            <ArrowRight
+              size={16}
+              className="transition-transform duration-200 group-hover:translate-x-0.5"
+            />
+          </a>
+        </div>
+
+        {/* ================= MOBILE BUTTONS ================= */}
+
+        <div className="flex items-center gap-2 md:hidden">
+          {/* Mobile Theme */}
+          <button
+            onClick={() => setDarkMode((previous) => !previous)}
+            aria-label="Toggle dark mode"
+            className="
+              flex h-10 w-10 items-center justify-center
+              rounded-xl
+              border border-slate-200
+              bg-white
+              text-slate-600
+
+              dark:border-white/10
+              dark:bg-white/5
+              dark:text-slate-300
+            "
+          >
+            {darkMode ? <Sun size={18} /> : <Moon size={18} />}
+          </button>
+
+          {/* Mobile Menu */}
+          <button
+            onClick={() => setMobileMenu((previous) => !previous)}
+            aria-label="Open menu"
+            className="
+              flex h-10 w-10 items-center justify-center
+              rounded-xl
+              border border-slate-200
+              bg-white
+              text-slate-700
+
+              dark:border-white/10
+              dark:bg-white/5
+              dark:text-slate-200
+            "
+          >
+            {mobileMenu ? <X size={20} /> : <Menu size={20} />}
+          </button>
+        </div>
+      </nav>
+
+      {/* ================= MOBILE MENU ================= */}
+
+      {mobileMenu && (
+        <div
+          className="
+            border-t border-slate-200
+            bg-white
+            px-5 py-5
+            md:hidden
+
+            dark:border-white/10
+            dark:bg-[#07110D]
+          "
+        >
+          <div className="flex flex-col gap-2">
+            <button
+              onClick={() => scrollToSection("features")}
+              className="
+                rounded-xl px-4 py-3 text-left text-sm font-medium
+                text-slate-700
+                hover:bg-emerald-50
+                hover:text-emerald-600
+
+                dark:text-slate-300
+                dark:hover:bg-emerald-950
+                dark:hover:text-emerald-400
+              "
+            >
+              Features
+            </button>
+
+            <button
+              onClick={() => scrollToSection("how-it-works")}
+              className="
+                rounded-xl px-4 py-3 text-left text-sm font-medium
+                text-slate-700
+                hover:bg-emerald-50
+                hover:text-emerald-600
+
+                dark:text-slate-300
+                dark:hover:bg-emerald-950
+                dark:hover:text-emerald-400
+              "
+            >
+              How It Works
+            </button>
+
+            <button
+              onClick={() => scrollToSection("use-cases")}
+              className="
+                rounded-xl px-4 py-3 text-left text-sm font-medium
+                text-slate-700
+                hover:bg-emerald-50
+                hover:text-emerald-600
+
+                dark:text-slate-300
+                dark:hover:bg-emerald-950
+                dark:hover:text-emerald-400
+              "
+            >
+              Use Cases
+            </button>
+
+            <button
+              onClick={() => scrollToSection("contact")}
+              className="
+                rounded-xl px-4 py-3 text-left text-sm font-medium
+                text-slate-700
+                hover:bg-emerald-50
+                hover:text-emerald-600
+
+                dark:text-slate-300
+                dark:hover:bg-emerald-950
+                dark:hover:text-emerald-400
+              "
+            >
+              Contact
+            </button>
+
+            <div className="my-2 border-t border-slate-200 dark:border-white/10" />
+
+            <a
+              href="/login"
+              className="
+                rounded-xl border border-slate-300
+                px-4 py-3 text-center text-sm font-semibold
+                text-slate-700
+
+                dark:border-white/15
+                dark:text-slate-200
+              "
+            >
+              Login
+            </a>
+
+            <a
+              href="/signup"
+              className="
+                rounded-xl bg-emerald-600
+                px-4 py-3 text-center text-sm font-semibold
+                text-white
+                hover:bg-emerald-700
+              "
+            >
+              Get Started
+            </a>
+          </div>
+        </div>
+      )}
+    </header>
+  );
+};
+
+export default Navbar;
