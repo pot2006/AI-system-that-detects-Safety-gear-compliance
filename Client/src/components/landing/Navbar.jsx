@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Sun, Moon, Menu, X, ArrowRight, Eye } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const [darkMode, setDarkMode] = useState(() => {
@@ -7,6 +8,13 @@ const Navbar = () => {
   });
 
   const [mobileMenu, setMobileMenu] = useState(false);
+
+  // =========================
+  // Authentication State
+  // =========================
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    return Boolean(localStorage.getItem("vigilToken"));
+  });
 
   // Apply theme
   useEffect(() => {
@@ -20,6 +28,29 @@ const Navbar = () => {
       localStorage.setItem("theme", "light");
     }
   }, [darkMode]);
+  // =========================
+  // Check Authentication
+  // =========================
+  useEffect(() => {
+    const checkAuthentication = () => {
+      setIsLoggedIn(Boolean(localStorage.getItem("vigilToken")));
+    };
+
+    // Check when the page becomes visible again
+    window.addEventListener("focus", checkAuthentication);
+
+    // Check localStorage changes from another tab
+    window.addEventListener("storage", checkAuthentication);
+
+    // Check login/logout changes in the same tab
+    window.addEventListener("authChanged", checkAuthentication);
+
+    return () => {
+      window.removeEventListener("focus", checkAuthentication);
+      window.removeEventListener("storage", checkAuthentication);
+      window.removeEventListener("authChanged", checkAuthentication);
+    };
+  }, []);
 
   // Navigation
   const scrollToSection = (id) => {
@@ -44,39 +75,43 @@ const Navbar = () => {
       <nav className="mx-auto flex h-20 max-w-7xl items-center justify-between px-5 sm:px-6 lg:px-8">
         {/* ================= LOGO ================= */}
 
-        {/* Logo */}
         <button
-          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          onClick={() =>
+            window.scrollTo({
+              top: 0,
+              behavior: "smooth",
+            })
+          }
           className="group flex items-center gap-3"
         >
           {/* Vigil Logo */}
           <div
             className="
-      relative flex h-10 w-10 items-center justify-center
-      rounded-xl
-      bg-emerald-600
-      text-white
-      shadow-sm
-      transition-all duration-300
-      group-hover:scale-105
-      group-hover:bg-emerald-700
-      group-hover:shadow-md
-      dark:bg-emerald-500
-      dark:text-[#07110D]
-      dark:group-hover:bg-emerald-400
-    "
+              relative flex h-10 w-10 items-center justify-center
+              rounded-xl
+              bg-emerald-600
+              text-white
+              shadow-sm
+              transition-all duration-300
+              group-hover:scale-105
+              group-hover:bg-emerald-700
+              group-hover:shadow-md
+              dark:bg-emerald-500
+              dark:text-[#07110D]
+              dark:group-hover:bg-emerald-400
+            "
           >
             <Eye size={23} strokeWidth={2.2} />
 
             {/* Camera status dot */}
             <span
               className="
-        absolute right-1.5 top-1.5
-        h-1.5 w-1.5
-        rounded-full
-        bg-white
-        dark:bg-[#07110D]
-      "
+                absolute right-1.5 top-1.5
+                h-1.5 w-1.5
+                rounded-full
+                bg-white
+                dark:bg-[#07110D]
+              "
             />
           </div>
 
@@ -84,22 +119,22 @@ const Navbar = () => {
           <div className="text-left">
             <span
               className="
-        block text-xl font-bold tracking-tight
-        text-slate-900
-        dark:text-white
-      "
+                block text-xl font-bold tracking-tight
+                text-slate-900
+                dark:text-white
+              "
             >
               Vigil
             </span>
 
             <span
               className="
-        hidden text-[10px] font-medium
-        uppercase tracking-[0.16em]
-        text-slate-500
-        sm:block
-        dark:text-slate-400
-      "
+                hidden text-[10px] font-medium
+                uppercase tracking-[0.16em]
+                text-slate-500
+                sm:block
+                dark:text-slate-400
+              "
             >
               AI Safety
             </span>
@@ -197,25 +232,80 @@ const Navbar = () => {
             {darkMode ? <Sun size={18} /> : <Moon size={18} />}
           </button>
 
-          {/* Login */}
-          <a
-            href="/login"
-            className="rounded-xl border border-slate-300 px-5 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-emerald-500 hover:text-emerald-600 dark:border-[#263C31] dark:text-slate-300 dark:hover:border-emerald-500 dark:hover:text-emerald-400"
-          >
-            Login
-          </a>
+          {/* =========================
+              LOGGED IN
+          ========================= */}
+          {isLoggedIn ? (
+            <Link
+              to="/dashboard"
+              className="
+                group inline-flex items-center gap-2
+                rounded-xl
+                bg-emerald-600
+                px-5 py-2.5
+                text-sm font-semibold
+                text-white
+                transition
+                hover:bg-emerald-700
+              "
+            >
+              Dashboard
+              <ArrowRight
+                size={16}
+                className="
+                  transition-transform
+                  group-hover:translate-x-1
+                "
+              />
+            </Link>
+          ) : (
+            <>
+              {/* Login */}
+              <Link
+                to="/login"
+                className="
+                  rounded-xl
+                  border border-slate-300
+                  px-5 py-2.5
+                  text-sm font-semibold
+                  text-slate-700
+                  transition
+                  hover:border-emerald-500
+                  hover:text-emerald-600
+                  dark:border-[#263C31]
+                  dark:text-slate-300
+                  dark:hover:border-emerald-500
+                  dark:hover:text-emerald-400
+                "
+              >
+                Login
+              </Link>
 
-          {/* Get Started */}
-          <a
-            href="/signup"
-            className="group inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-700"
-          >
-            Get Started
-            <ArrowRight
-              size={16}
-              className="transition-transform group-hover:translate-x-1"
-            />
-          </a>
+              {/* Get Started */}
+              <Link
+                to="/signup"
+                className="
+                  group inline-flex items-center gap-2
+                  rounded-xl
+                  bg-emerald-600
+                  px-5 py-2.5
+                  text-sm font-semibold
+                  text-white
+                  transition
+                  hover:bg-emerald-700
+                "
+              >
+                Get Started
+                <ArrowRight
+                  size={16}
+                  className="
+                    transition-transform
+                    group-hover:translate-x-1
+                  "
+                />
+              </Link>
+            </>
+          )}
         </div>
 
         {/* ================= MOBILE BUTTONS ================= */}
@@ -276,6 +366,7 @@ const Navbar = () => {
           "
         >
           <div className="flex flex-col gap-2">
+            {/* Features */}
             <button
               onClick={() => scrollToSection("features")}
               className="
@@ -292,6 +383,7 @@ const Navbar = () => {
               Features
             </button>
 
+            {/* How It Works */}
             <button
               onClick={() => scrollToSection("how-it-works")}
               className="
@@ -308,6 +400,7 @@ const Navbar = () => {
               How It Works
             </button>
 
+            {/* Use Cases */}
             <button
               onClick={() => scrollToSection("use-cases")}
               className="
@@ -324,6 +417,7 @@ const Navbar = () => {
               Use Cases
             </button>
 
+            {/* Contact */}
             <button
               onClick={() => scrollToSection("contact")}
               className="
@@ -342,31 +436,66 @@ const Navbar = () => {
 
             <div className="my-2 border-t border-slate-200 dark:border-white/10" />
 
-            <a
-              href="/login"
-              className="
-                rounded-xl border border-slate-300
-                px-4 py-3 text-center text-sm font-semibold
-                text-slate-700
+            {/* =========================
+                MOBILE AUTH BUTTON
+            ========================= */}
 
-                dark:border-white/15
-                dark:text-slate-200
-              "
-            >
-              Login
-            </a>
+            {isLoggedIn ? (
+              <Link
+                to="/dashboard"
+                onClick={() => setMobileMenu(false)}
+                className="
+                  flex items-center justify-center gap-2
+                  rounded-xl
+                  bg-emerald-600
+                  px-4 py-3
+                  text-sm font-semibold
+                  text-white
+                  hover:bg-emerald-700
+                "
+              >
+                Dashboard
+                <ArrowRight size={16} />
+              </Link>
+            ) : (
+              <>
+                {/* Mobile Login */}
+                <Link
+                  to="/login"
+                  onClick={() => setMobileMenu(false)}
+                  className="
+                    rounded-xl
+                    border border-slate-300
+                    px-4 py-3
+                    text-center
+                    text-sm font-semibold
+                    text-slate-700
 
-            <a
-              href="/signup"
-              className="
-                rounded-xl bg-emerald-600
-                px-4 py-3 text-center text-sm font-semibold
-                text-white
-                hover:bg-emerald-700
-              "
-            >
-              Get Started
-            </a>
+                    dark:border-white/15
+                    dark:text-slate-200
+                  "
+                >
+                  Login
+                </Link>
+
+                {/* Mobile Get Started */}
+                <Link
+                  to="/signup"
+                  onClick={() => setMobileMenu(false)}
+                  className="
+                    rounded-xl
+                    bg-emerald-600
+                    px-4 py-3
+                    text-center
+                    text-sm font-semibold
+                    text-white
+                    hover:bg-emerald-700
+                  "
+                >
+                  Get Started
+                </Link>
+              </>
+            )}
           </div>
         </div>
       )}

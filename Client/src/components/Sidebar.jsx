@@ -1,4 +1,5 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+
 import {
   LayoutDashboard,
   Video,
@@ -6,6 +7,7 @@ import {
   BarChart3,
   Box,
   Settings,
+  LogOut,
   Eye,
 } from "lucide-react";
 
@@ -39,6 +41,23 @@ const navigation = [
 
 const Sidebar = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+
+  // =========================
+  // Logout
+  // =========================
+  const handleLogout = () => {
+    // Remove authentication data
+    localStorage.removeItem("vigilToken");
+    localStorage.removeItem("vigilUser");
+    localStorage.removeItem("vigilRememberMe");
+
+    // Notify other components that authentication changed
+    window.dispatchEvent(new Event("authChanged"));
+
+    // Redirect to login page
+    navigate("/login");
+  };
 
   return (
     <aside
@@ -53,15 +72,20 @@ const Sidebar = () => {
         dark:bg-[#0D1914]
       "
     >
-      {/* Logo */}
+      {/* =========================
+          LOGO
+      ========================= */}
       <div className="flex h-20 items-center border-b border-slate-200 px-4 dark:border-[#1C3027]">
         <Link to="/" className="flex min-w-[225px] items-center gap-3">
+          {/* Logo Icon */}
           <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-600 text-white shadow-sm">
             <Eye size={23} strokeWidth={2.2} />
 
+            {/* Status Dot */}
             <span className="absolute right-1.5 top-1.5 h-1.5 w-1.5 rounded-full bg-white dark:bg-[#07110D]" />
           </div>
 
+          {/* Brand */}
           <div
             className="
               overflow-hidden whitespace-nowrap
@@ -81,8 +105,11 @@ const Sidebar = () => {
         </Link>
       </div>
 
-      {/* Navigation */}
+      {/* =========================
+          NAVIGATION
+      ========================= */}
       <nav className="flex h-[calc(100vh-144px)] flex-col px-3 py-5">
+        {/* Main Navigation */}
         <div className="space-y-2">
           {navigation.map((item) => {
             const Icon = item.icon;
@@ -96,6 +123,7 @@ const Sidebar = () => {
                   relative flex h-11 items-center
                   rounded-xl
                   transition-colors duration-200
+
                   ${
                     active
                       ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400"
@@ -103,14 +131,17 @@ const Sidebar = () => {
                   }
                 `}
               >
+                {/* Active Indicator */}
                 {active && (
                   <span className="absolute left-0 h-6 w-1 rounded-r-full bg-emerald-600 dark:bg-emerald-400" />
                 )}
 
+                {/* Icon */}
                 <div className="flex w-[50px] shrink-0 items-center justify-center">
                   <Icon size={20} strokeWidth={2} />
                 </div>
 
+                {/* Label */}
                 <span
                   className="
                     whitespace-nowrap text-sm font-medium
@@ -126,14 +157,20 @@ const Sidebar = () => {
           })}
         </div>
 
-        {/* Settings */}
+        {/* =========================
+            SETTINGS + LOGOUT
+        ========================= */}
         <div className="mt-auto border-t border-slate-200 pt-4 dark:border-[#1C3027]">
+          {/* =========================
+              SETTINGS
+          ========================= */}
           <Link
             to="/settings"
             className={`
               relative flex h-11 items-center
               rounded-xl
               transition-colors duration-200
+
               ${
                 location.pathname === "/settings"
                   ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400"
@@ -141,14 +178,17 @@ const Sidebar = () => {
               }
             `}
           >
+            {/* Active Indicator */}
             {location.pathname === "/settings" && (
               <span className="absolute left-0 h-6 w-1 rounded-r-full bg-emerald-600 dark:bg-emerald-400" />
             )}
 
+            {/* Icon */}
             <div className="flex w-[50px] shrink-0 items-center justify-center">
               <Settings size={20} strokeWidth={2} />
             </div>
 
+            {/* Label */}
             <span
               className="
                 whitespace-nowrap text-sm font-medium
@@ -160,14 +200,55 @@ const Sidebar = () => {
               Settings
             </span>
           </Link>
+
+          {/* =========================
+              LOGOUT
+          ========================= */}
+          <button
+            type="button"
+            onClick={handleLogout}
+            className="
+              group/logout relative mt-2 flex h-11 w-full
+              items-center rounded-xl
+              text-left
+              text-slate-600
+              transition-colors duration-200
+              hover:bg-red-50
+              hover:text-red-600
+              dark:text-slate-400
+              dark:hover:bg-red-500/10
+              dark:hover:text-red-400
+            "
+          >
+            {/* Logout Icon */}
+            <div className="flex w-[50px] shrink-0 items-center justify-center">
+              <LogOut size={20} strokeWidth={2} />
+            </div>
+
+            {/* Logout Label */}
+            <span
+              className="
+                whitespace-nowrap text-sm font-medium
+                opacity-0
+                transition-opacity duration-200
+                group-hover:opacity-100
+              "
+            >
+              Logout
+            </span>
+          </button>
         </div>
       </nav>
 
-      {/* System Status */}
+      {/* =========================
+          SYSTEM STATUS
+      ========================= */}
       <div className="absolute bottom-0 left-0 right-0 h-16 border-t border-slate-200 dark:border-[#1C3027]">
         <div className="flex h-full min-w-[225px] items-center gap-3 px-5">
+          {/* Status Indicator */}
           <span className="h-2.5 w-2.5 shrink-0 rounded-full bg-emerald-500 shadow-[0_0_0_3px_rgba(16,185,129,0.12)]" />
 
+          {/* Status Text */}
           <span
             className="
               whitespace-nowrap text-xs font-medium
